@@ -16,6 +16,9 @@ require("dotenv").config();
 const authRouter = require("./routes/auth.routes")
 app.use("/", authRouter)
 
+const usersRouter = require("./routes/users.routes");
+app.use("/user", authMiddleware, usersRouter)
+
 const PORT = 8000;
 app.listen(PORT, (err) => {
   if (err) {
