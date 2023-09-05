@@ -13,6 +13,9 @@ app.use(express.json());
 const mongooseConnect = require("./configs/mongoDB.connect");
 require("dotenv").config();
 
+const authRouter = require("./routes/auth.routes")
+app.use("/", authRouter)
+
 const PORT = 8000;
 app.listen(PORT, (err) => {
   if (err) {
