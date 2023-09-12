@@ -32,6 +32,77 @@ const updateAccount = async (req, res)=>{
 }
 
 
+const updatePassword = async (req, res)=>{
+  const {user_id} = req.params;
+  const {_id: auth_user_id} = req.user;
+  const {current_password, new_password} = req.body;
+
+  try {
+    if (user_id !== auth_user_id) {
+      return res.status(401).send("You are not authorized to update this account.");
+    }
+
+    const user = await User.findById(user_id);
+
+    if(!user.comparePassword(current_password)){
+      return res.status(400).send("Current password is incorrect.");
+    }
+
+    user.password = await bcrypt.hash(new_password, 10);
+
+    await user.save();
+
+    res.status(200).send({user, message: "Password updated successfully."});
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("An error occurred while updating the password.");
+  }
+}
+
+
+const deleteAccount = async (req, res)=>{
+  const {user_id} = req.params;
+  const {_id: auth_user_id} = req.user;
+
+  try {
+    if (user_id !== auth_user_id) {
+      return res.status(401).send("You are not authorized to delete this account.");
+    }
+
+    const user = await User.findById(user_id);
+    const items = await Item.find({user_id});
+
+    const usersFavorites = await User.find({"user_favorites.item_id": {$in: items.map(item=>item._id)}});
+    for(const user of usersFavorites){
+      user.user_favorites.pull({item_id: {$in: items.map(item=>item._id)}});
+      await user.save();
+    }
+
+    const usersBookings = await User.find({"user_bookings.item_id": {$in: items.map(item=>item._id)}});
+    for (const user of usersBookings) {
+      user.user_bookings.pull({item_id: {$in: items.map(item=>item._id)}});
+      await user.save();
+    }
+
+    const usersRatings = await User.find({"user_ratings.item_id": {$in: items.map(item=>item._id)}});
+    for (const user of usersRatings) {
+      user.user_ratings.pull({item_id: {$in: items.map(item=>item._id)}});
+      await user.save();
+    }
+
+    await Item.deleteMany({user_id});
+    
+    await user.remove();
+
+    res.status(200).send({message: "Account deleted successfully."});
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("An error occurred while deleting the account.");
+  }
+}
+
+
 module.exports = {
-  updateAccount
+  updateAccount,
+  updatePassword
 }
