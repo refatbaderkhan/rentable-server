@@ -86,9 +86,41 @@ const deleteCategory = async (req, res)=>{
 };
 
 
+const deleteSubCategory = async (req, res)=>{
+  const {subCategory_id} = req.params;
+
+  try {
+
+    const subCategory = await SubCategory.findById(subCategory_id);
+
+    if (!subCategory) {
+      return res.status(404).send("subCategory not found.");
+    }
+
+    const subCategory_name = subCategory.subCategory_name;
+
+    const category = await Category.findById(subCategory.category_id)
+
+    category.subCategorySchema.pull({ _id: subCategory_id });
+    category.subCategories_names.pull(subCategory_name);
+
+    await Promise.all([
+      category.save(),
+      SubCategory.deleteOne({ _id: subCategory_id }),
+    ]);
+
+    res.status(200).send({ message: "Subcategory deleted successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while deleting the subcategory.");
+  }
+};
+
+
 module.exports = {
   createCategory,
   createSubCategory,
-  deleteCategory
+  deleteCategory,
+  deleteSubCategory,
 }
 
