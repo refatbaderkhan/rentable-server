@@ -1,23 +1,38 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken")
-const User = require("../models/users.model")
+const User = require("../models/user.model")
+
 
 const login = async (req, res)=>{
     const {email, password} = req.body;
-    const user = await User.findOne({email})
-    if(!user) return res.status(404).send({message: "email/password incorrect"});
-    const isValid = await bcrypt.compare(password, user.password);
-    if(!isValid) return res.status(404).send({message: "email/password incorrect"});
+    try {
+      const user = await User.findOne({email})
+      if(!user) {
+        return res.status(404).send({message: "email/password incorrect"});
+      }
 
-    const {password: hashedPassword, username, _id, ...userInfo} = user.toJSON();
-    const token = jwt.sign({username, email, _id}, process.env.JWT_SECRET)
+      const isValid = await bcrypt.compare(password, user.password);
+      if(!isValid) {
+        return res.status(404).send({message: "email/password incorrect"});
+      }
 
-    res.send({
+      const {password: hashedPassword, username, _id, user_type, profile_picture, ...userInfo} = user.toJSON();
+      const token = jwt.sign(
+        {username, email, _id, user_type, profile_picture, ...userInfo},
+        process.env.JWT_SECRET
+      )
+
+      res.send({
         token,
-        user: userInfo
-    })
-
+        user: 
+          {_id, username, email, user_type, profile_picture, ...userInfo}
+      })
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("An error occurred while logging in.");
 }
+}
+
 
 const register = async (req, res) => {
   const { password, username, first_name, last_name, email } = req.body;
@@ -38,9 +53,11 @@ const register = async (req, res) => {
       email,
       profile_picture,
       password: hashedPassword,
+      user_type: 1
     });
 
     await user.save();
+
     res.status(201).send({ user, message: "Account created successfully." });
   } catch (error) {
     res.status(500).send("An error occurred while registering the user.");
@@ -48,4 +65,7 @@ const register = async (req, res) => {
 };
 
 
-module.exports = {login, register}
+module.exports = {
+  login,
+  register
+}
