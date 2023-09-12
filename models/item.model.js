@@ -57,6 +57,24 @@ const bookingSchema = new mongoose.Schema({
 });
 
 
+const ratingSchema = new mongoose.Schema({
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  username: String,
+  },
+  rating: {
+    type: Number,
+    min: 1,
+    max: 5,
+  },
+  review: String,
+}, {
+  timestamps: true,
+});
+
+
+
 module.exports = {
   Category,
   SubCategory,
