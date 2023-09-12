@@ -26,8 +26,16 @@ const categorySchema = new mongoose.Schema({
 const Category = mongoose.model("Category", categorySchema);
 
 
+const citySchema = new mongoose.Schema({
+  city_name: String,
+  areas: [String],
+});
+
+const City = mongoose.model("City", citySchema);
+
+
 module.exports = {
   Category,
   SubCategory,
-
+  City
 }
