@@ -26,7 +26,41 @@ const createCity = async (req, res)=>{
 };
 
 
+const createArea = async (req, res)=>{
+  const {city_id} = req.params;
+  const {area_name} = req.body;
+
+  try {
+    if (!city_id || !area_name) {
+      return res.status(400).send("City ID and area name are required.");
+    }
+
+    const city = await City.findById(city_id);
+
+    if (!city) {
+      return res.status(404).send("City not found.");
+    }
+    
+    const existingArea = city.areas.find(area => area === area_name);
+
+    if (existingArea) {
+      return res.status(400).send("Area already exists.");
+    }
+
+    city.areas.push(area_name);
+    
+    await city.save();
+
+    res.status(201).send("Area created successfully.");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while creating the area.");
+  }
+};
+
+
 module.exports = {
-  createCity
+  createCity,
+  createArea
 }
 
