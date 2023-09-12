@@ -46,6 +46,16 @@ const locationSchema = new mongoose.Schema({
 });
 
 
+const bookingSchema = new mongoose.Schema({
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  username: String,
+  start_date: Date,
+  end_date: Date,
+});
+
 
 module.exports = {
   Category,
