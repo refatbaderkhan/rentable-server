@@ -59,8 +59,29 @@ const createArea = async (req, res)=>{
 };
 
 
+const deleteCity = async (req, res)=>{
+  const {city_id} = req.params;
+
+  try {
+    const city = await City.findById(city_id);
+
+    if (!city) {
+      return res.status(404).send("City not found.");
+    }
+
+    await City.deleteOne({ _id: city_id });
+
+    res.status(200).send({ message: "City deleted successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while deleting the city.");
+  }
+};
+
+
 module.exports = {
   createCity,
-  createArea
+  createArea,
+  deleteCity
 }
 
