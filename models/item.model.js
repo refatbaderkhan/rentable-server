@@ -74,9 +74,39 @@ const ratingSchema = new mongoose.Schema({
 });
 
 
+const itemSchema = new mongoose.Schema({
+  item_name: String,
+  item_description: String,
+  item_price: Number,
+  item_images: [String],
+  item_category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+  },
+  item_category_name: String,
+  item_subcategory: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "SubCategory",
+  },
+  item_subcategory_name: String,
+  item_location: locationSchema,
+  item_bookings: [bookingSchema],
+  item_ratings: [ratingSchema],
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  username: String,
+  user_profile_picture: String,
+}, {
+  timestamps: true
+})
+
+const Item = mongoose.model('Item', itemSchema);
 
 module.exports = {
   Category,
   SubCategory,
-  City
+  City,
+  Item
 }
