@@ -104,5 +104,6 @@ const deleteAccount = async (req, res)=>{
 
 module.exports = {
   updateAccount,
-  updatePassword
+  updatePassword,
+  deleteAccount
 }
