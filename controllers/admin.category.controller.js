@@ -64,8 +64,31 @@ const createSubCategory = async (req, res)=>{
   }
 }
 
+
+const deleteCategory = async (req, res)=>{
+  const {category_id} = req.params;
+
+  try {
+    const category = await Category.findById(category_id);
+
+    if (!category) {
+      return res.status(404).send("Category not found.");
+    }
+
+    await SubCategory.deleteMany({ category_id });
+    await category.deleteOne({ _id: category_id })
+
+    res.status(200).send({ message: "Category deleted successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while deleting the category.");
+  }
+};
+
+
 module.exports = {
   createCategory,
-  createSubCategory
+  createSubCategory,
+  deleteCategory
 }
 
