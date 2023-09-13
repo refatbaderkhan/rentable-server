@@ -181,9 +181,53 @@ const rateUser = async (req, res) => {
 };
 
 
+const modifyUserRating = async (req, res) => {
+  const { user_id, rating_id } = req.params;
+  const { rating, review } = req.body;
+  const { _id: rater_user_id } = req.user;
+
+  try {
+    const user = await User.findById(user_id);
+
+    if (!user) {
+      return res.status(404).send("User not found.");
+    }
+
+    const ratingObject = user.user_ratings.find((rating) => rating._id.toString() === rating_id);
+    
+    if (!ratingObject) {
+      return res.status(404).send("Rating not found.");
+    }
+
+    if (ratingObject.rater_user_id.toString() !== rater_user_id) {
+      return res.status(401).send("You are not authorized to modify this rating.");
+    }
+
+    if (rating !== undefined) {
+      if (rating < 1 || rating > 5) {
+        return res.status(400).send("Rating must be between 1 and 5.");
+      }
+      ratingObject.rating = rating;
+    }
+
+    if (review !== undefined) {
+      ratingObject.review = review;
+    }
+
+    await user.save();
+    
+    res.status(200).send({ user, message: "Rating modified successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while modifying the rating.");
+  }
+};
+
+
 module.exports = {
   rateItem,
   modifyItemRating,
   deleteItemRating,
-  rateUser
+  rateUser,
+  modifyUserRating
 }
