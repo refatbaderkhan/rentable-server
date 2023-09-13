@@ -10,14 +10,20 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cors());
 app.use(express.json());
 
+
 const mongooseConnect = require("./configs/mongoDB.connect");
 require("dotenv").config();
 
+
+const authMiddleware = require("./middlewares/auth.middleware");
+
+
 const authRouter = require("./routes/auth.routes")
-app.use("/", authRouter)
+app.use("/auth", authRouter)
 
 const usersRouter = require("./routes/users.routes");
 app.use("/user", authMiddleware, usersRouter)
+
 
 const PORT = 8000;
 app.listen(PORT, (err) => {
