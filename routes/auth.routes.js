@@ -8,14 +8,21 @@ const storage = multer.diskStorage({
     cb(null, "uploads/"); 
   },
   filename: function (req, file, cb) {
-    const originalFilename = file.originalname;
-    cb(null, originalFilename);
-  },
+    const username = req.body.username;
+    const timestamp = new Date().toISOString().split('.')[0].replace(/:/g, "-");
+    const originalName = file.originalname;
+    const extension = originalName.split(".").pop();
+    const filename = `${username}_${timestamp}.${extension}`;
+    cb(null, filename);
+  }
 });
+
 
 const upload = multer({ storage: storage });
 
+
 router.post("/login", authController.login)
 router.post("/register", upload.single("profile_picture"), authController.register);
+
 
 module.exports = router;
