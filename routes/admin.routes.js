@@ -5,4 +5,9 @@ const adminLocationController = require("../controllers/admin.location.controlle
 const adminCategoryController = require("../controllers/admin.category.controller");
 
 
+router.post("/update-password/:user_id", adminUserController.updateUserPassword);
+router.delete("/delete-account/:user_id", adminUserController.deleteUserAccount);
+
+
+
 module.exports = router;
