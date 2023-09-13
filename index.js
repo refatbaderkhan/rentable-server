@@ -25,6 +25,8 @@ app.use("/auth", authRouter)
 const usersRouter = require("./routes/users.routes");
 app.use("/user", authMiddleware, usersRouter)
 
+const generalRouter = require("./routes/general.routes");
+app.use("/", generalRouter)
 
 const PORT = 8000;
 app.listen(PORT, (err) => {
