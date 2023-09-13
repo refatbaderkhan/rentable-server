@@ -31,5 +31,9 @@ router.post("/create-item", upload.single("item_image"), userItemController.crea
 router.post("/item/:item_id", userItemController.modifyItem);
 router.delete("/item/:item_id", userItemController.deleteItem);
 
+router.get("/bookings", userBookingController.getBookings);
+router.post("/book/:item_id", userBookingController.bookItem);
+router.delete("/book/:booking_id", userBookingController.deleteBooking);
+
 
 module.exports = router;
