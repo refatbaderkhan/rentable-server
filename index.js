@@ -28,6 +28,10 @@ app.use("/user", authMiddleware, usersRouter)
 const generalRouter = require("./routes/general.routes");
 app.use("/", generalRouter)
 
+const adminRouter = require("./routes/admin.routes");
+app.use("/admin", adminMiddleware, adminRouter)
+
+
 const PORT = 8000;
 app.listen(PORT, (err) => {
   if (err) {
