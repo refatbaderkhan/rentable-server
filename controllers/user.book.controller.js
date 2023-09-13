@@ -76,7 +76,47 @@ const bookItem = async (req, res)=>{
 }
 
 
+const deleteBooking = async (req, res)=>{
+  const {booking_id} = req.params;
+  const {_id: user_id} = req.user;
+
+  try {
+    const user = await User.findById(user_id);
+
+    if (!user) {
+      return res.status(404).send("User not found.");
+    }
+
+    const booking = user.user_bookings.find(booking => booking._id.toString() === booking_id);
+    const item_booking_id = booking.item_booking_id;
+
+    if (!booking) {
+      return res.status(404).send("Booking not found.");
+    }
+
+    const item = await Item.findById(booking.item_id);
+
+    if (!item) {
+      return res.status(404).send("Item not found.");
+    }
+
+    user.user_bookings.pull(booking_id);
+    await user.save();
+
+
+    item.item_bookings.pull(item_booking_id);
+    await item.save();
+
+    res.status(200).send("booking deleted successfully.");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("An error occurred while deleting the booking.");
+  }
+}
+
+
 module.exports = {
   getBookings,
-  bookItem
+  bookItem,
+  deleteBooking,
 }
