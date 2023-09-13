@@ -16,6 +16,7 @@ require("dotenv").config();
 
 
 const authMiddleware = require("./middlewares/auth.middleware");
+const adminMiddleware = require("./middlewares/admin.middleware");
 
 
 const authRouter = require("./routes/auth.routes")
