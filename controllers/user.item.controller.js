@@ -148,8 +148,47 @@ const modifyItem = async (req, res)=>{
 }
 
 
+const deleteItem = async (req, res)=>{
+  const {item_id} = req.params;
+  const {_id: user_id} = req.user;
+
+  try {
+    const item = await Item.findById(item_id);
+
+    if (!item) {
+      return res.status(404).send("Item not found.");
+    }
+    
+    if (item.user_id.toString() !== user_id) {
+      return res.status(401).send("You are not authorized to delete this item.");
+    }
+
+    const itemFavorites = await User.find({favorite_items: {$in: [item_id]}});
+    for (const user of itemFavorites) {
+      user.favorite_items.pull(item_id);
+      await user.save();
+    }
+
+    const itemBookings = await User.find({bookings: {$in: [item_id]}});
+    for (const user of itemBookings) {
+      user.bookings.pull(item_id);
+      await user.save();
+    }
+    
+    await Item.deleteOne({_id:item_id})
+    await User.findByIdAndUpdate(user_id, {$pull: {user_items: item_id}});
+
+    res.status(200).send("Item deleted successfully.");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("An error occurred while deleting the item.");
+  }
+}
+
+
 module.exports = {
   getUserItems,
   createItem,
-  modifyItem
+  modifyItem,
+  deleteItem
 }
