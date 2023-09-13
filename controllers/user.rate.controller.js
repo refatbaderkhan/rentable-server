@@ -44,6 +44,52 @@ const rateItem = async (req, res) => {
 };
 
 
+const modifyItemRating = async (req, res) => {
+  const { item_id, rating_id } = req.params;
+  const { rating, review } = req.body;
+  const { _id: user_id } = req.user;
+
+  try {
+    const item = await Item.findById(item_id);
+
+    if (!item) {
+      return res.status(404).send("Item not found.");
+    }
+    
+    const ratingObject = item.item_ratings.find(
+      (rating) => rating._id.toString() === rating_id
+    );
+
+    if (!ratingObject) {
+      return res.status(404).send("Rating not found.");
+    }
+
+    if (ratingObject.user_id.toString() !== user_id) {
+      return res.status(401).send("You are not authorized to modify this rating.");
+    }
+
+    if (rating !== undefined) {
+      if (rating < 1 || rating > 5) {
+        return res.status(400).send("Rating must be between 1 and 5.");
+      }
+      ratingObject.rating = rating;
+    }
+
+    if (review !== undefined) {
+      ratingObject.review = review;
+    }
+
+    await item.save();
+
+    res.status(200).send({ item, message: "Rating modified successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while modifying the rating.");
+  }
+};
+
+
 module.exports = {
-  rateItem
+  rateItem,
+  modifyItemRating
 }
