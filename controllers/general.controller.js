@@ -25,6 +25,22 @@ const getItems = async (req, res)=>{
 }
 
 
+const searchItems = async (req, res)=>{
+  try {
+    const {search} = req.query;
+
+    if (!search) return res.status(400).send("No search query provided.");
+
+    const items = await Item.find({item_name: {$regex: search, $options: "i"}});
+
+    res.status(200).send(items);
+  } catch (error) {
+    res.status(500).send("An error occurred while searching for items.");
+  }
+}
+
+
 module.exports = {
-  getItems
+  getItems,
+  searchItems
 }
