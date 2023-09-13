@@ -139,8 +139,51 @@ const deleteItemRating = async (req, res) => {
 };
 
 
+const rateUser = async (req, res) => {
+  const { user_id } = req.params;
+  const { rating, review } = req.body;
+  const { _id: rater_user_id, username: rater_username, profile_picture: rater_profile_picture } = req.user;
+  
+  try {
+    const user = await User.findById(user_id);
+
+    if (!user) {
+      return res.status(404).send("User not found.");
+    }
+
+    if (user._id.toString() === rater_user_id) {
+      return res.status(400).send("You cannot rate yourself.");
+    }
+
+    if ((rating && (rating < 1 || rating > 5)) || (review && review.trim() === "")) {
+      return res.status(400).send("Invalid rating or review.");
+    }
+
+    const ratingObject = {
+      rater_user_id,
+      rater_username,
+      rater_profile_picture,
+      rating,
+      review,
+    };
+
+    if (rating || review) {
+      user.user_ratings.push(ratingObject);
+    }
+
+    await user.save();
+
+    res.status(200).send({ user, message: "User rated successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rating the user.");
+  }
+};
+
+
 module.exports = {
   rateItem,
   modifyItemRating,
-  deleteItemRating
+  deleteItemRating,
+  rateUser
 }
