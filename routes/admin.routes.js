@@ -15,4 +15,10 @@ router.delete("/delete-category/:category_id", adminCategoryController.deleteCat
 router.delete("/delete-subcategory/:subCategory_id", adminCategoryController.deleteSubCategory);
 
 
+router.post("/create-city", adminLocationController.createCity);
+router.post("/create-area/:city_id", adminLocationController.createArea);
+router.delete("/delete-city/:city_id", adminLocationController.deleteCity);
+router.delete("/delete-area/:city_id", adminLocationController.deleteArea);
+
+
 module.exports = router;
