@@ -49,7 +49,35 @@ const addFavorite = async (req, res) => {
 };
 
 
+const deleteFavorite = async (req, res) => {
+  const { item_id } = req.params;
+  const { _id: user_id } = req.user;
+
+  try {
+    const user = await User.findById(user_id);
+
+    if (!user) {
+      return res.status(404).send("User not found.");
+    }
+
+    if (!user.user_favorites.find(favorite => favorite.item_id.toString() === item_id)) {
+      return res.status(400).send("Item not in favorites.");
+    }
+
+    user.user_favorites.pull({ item_id });
+
+    await user.save();
+
+    res.status(200).send({ message: "Item deleted from favorites successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while deleting the item from favorites.");
+  }
+};
+
+
 module.exports = {
   getFavorites,
-  addFavorite
+  addFavorite,
+  deleteFavorite
 }
