@@ -46,6 +46,11 @@ io.on('connection', (socket) => {
       message_time,
     });
   });
+
+  socket.on('disconnect', () => {
+    console.log(`user disconnected: ${socket.id}`);
+  });
+
 });
 
 
