@@ -14,3 +14,16 @@ const messageSchema = new mongoose.Schema({
     default: Date.now(),
   },
 });
+
+
+const chatSchema = new mongoose.Schema({
+  chat_users: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  messages : [messageSchema],
+});
+
+
+const Chat = mongoose.model('Chat', chatSchema);
+module.exports = Chat;
