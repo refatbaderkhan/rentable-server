@@ -21,6 +21,7 @@ const getUserItems = async (req, res)=>{
 
 
 const createItem = async (req, res)=>{
+
   const {
     item_name,
     item_description,
@@ -29,22 +30,23 @@ const createItem = async (req, res)=>{
     item_subcategory,
     item_location
   }= req.body;
-  console.log(req.body);
-  const item_images = req.file ? [req.file.path] : [];
+
+  const item_images = req.files ? req.files.map(file => file.filename) : "";
+
   const {username, _id, profile_picture} = req.user;
 
   try {
 
-   const [checkCategory, checkSubcategory, checkCity, checkArea] = await Promise.all([
+    const [checkCategory, checkSubcategory, checkCity, checkArea] = await Promise.all([
      Category.findOne({category_name: item_category}),
      SubCategory.findOne({subCategory_name: item_subcategory}),
-    City.findOne({city_name: item_location.city}),
-    City.findOne({areas: {$in: [item_location.area]}}),
-   ]);
+     City.findOne({city_name: item_location.city}),
+     City.findOne({areas: {$in: [item_location.area]}}),
+    ]);
 
-    if (!checkCategory || !checkSubcategory || !checkCity || !checkArea) {
-      return res.status(400).send("Invalid category, subcategory");
-    }
+     if (!checkCategory || !checkSubcategory || !checkCity || !checkArea) {
+       return res.status(400).send("Invalid category, subcategory, city, or area.");
+     }
 
     const item = new Item({
       item_name,
