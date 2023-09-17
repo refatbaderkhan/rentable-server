@@ -36,6 +36,11 @@ io.on('connection', (socket) => {
      socket.join(room_id);
      chatRoom = room_id;
     });
+
+  socket.on('send_message', (data) => {
+    const { message, user_id } = data;
+    let message_time = Date.now();
+  });
 });
 
 
