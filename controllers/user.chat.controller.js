@@ -42,8 +42,33 @@ const getChats = async (req, res) => {
 }
 
 
+const getChatMessages = async (req, res) => {
+  const { _id: user_id } = req.user;
+  const { chat_id } = req.params;
+
+  try {
+    const chat = await Chat.findById(chat_id);
+
+    if (!chat) {
+      return res.status(404).send("Chat not found.");
+    }
+
+    if (!chat.chat_users.includes(user_id)) {
+      return res.status(403).send("You are not allowed to see this chat.");
+    }
+
+    res.status(200).send(chat.messages);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while getting the messages.");
+  }
+}
+
+
+
 module.exports = {
   chat,
-  getChats
+  getChats,
+  getChatMessages
 }
 
