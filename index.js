@@ -40,6 +40,11 @@ io.on('connection', (socket) => {
   socket.on('send_message', (data) => {
     const { message, user_id } = data;
     let message_time = Date.now();
+    io.to(chatRoom).emit('receive_message', {
+      message,
+      user_id,
+      message_time,
+    });
   });
 });
 
