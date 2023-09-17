@@ -26,10 +26,16 @@ const io = new Server(server, {
 });
 
 
+let chatRoom = '';
 
 io.on('connection', (socket) => {
   console.log(`user connected to socket: ${socket.id}`);
 
+  socket.on('join_chat', (data) => {
+     const { user_id, room_id } = data;
+     socket.join(room_id);
+     chatRoom = room_id;
+    });
 });
 
 
