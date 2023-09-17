@@ -65,10 +65,39 @@ const getChatMessages = async (req, res) => {
 }
 
 
+const message = async (req, res) => {
+  const { _id: user_id, username } = req.user;
+  const {chat_id} = req.params;
+  const { message } = req.body;
+
+  try {
+    const chat = await Chat.findById(chat_id);
+
+    if (!chat) {
+      return res.status(404).send("Chat not found.");
+    }
+
+    const newMessage = {
+      message,
+      sender_name: username,
+      sender: user_id,
+    };
+
+    chat.messages.push(newMessage);
+    await chat.save();
+    
+    res.status(200).send(newMessage);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while sending the message.");
+  }
+}
+
 
 module.exports = {
   chat,
   getChats,
-  getChatMessages
+  getChatMessages,
+  message,
 }
 
