@@ -26,8 +26,24 @@ const chat = async (req, res) => {
   }
 }
 
+const getChats = async (req, res) => {
+  const { _id: user_id } = req.user;
+
+  try {
+    const chats = await Chat.find({ chat_users: { $in: [user_id] } }).populate(
+      "chat_users"
+    );
+
+    res.status(200).send(chats);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while getting the chats.");
+  }
+}
+
 
 module.exports = {
-  chat
+  chat,
+  getChats
 }
 
