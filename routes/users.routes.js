@@ -36,5 +36,6 @@ router.get("/bookings", userBookingController.getBookings);
 router.post("/book/:item_id", userBookingController.bookItem);
 router.delete("/book/:booking_id", userBookingController.deleteBooking);
 
+router.get("/chat/:chat_users", userChatController.chat);
 
 module.exports = router;
