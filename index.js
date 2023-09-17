@@ -4,14 +4,12 @@ const bodyParser = require("body-parser");
 const path = require('path');
 const http = require('http');
 const cors = require('cors');
-
+const { Server } = require('socket.io');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cors());
 app.use(express.json());
-
-
 
 
 
