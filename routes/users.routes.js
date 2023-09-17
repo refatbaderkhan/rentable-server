@@ -39,5 +39,6 @@ router.delete("/book/:booking_id", userBookingController.deleteBooking);
 router.get("/chat/:chat_users", userChatController.chat);
 router.get("/chats", userChatController.getChats);
 router.post("/message/:chat_id", userChatController.message);
+router.get("/messages/:chat_id", userChatController.getChatMessages);
 
 module.exports = router;
