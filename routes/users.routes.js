@@ -5,6 +5,7 @@ const userBookingController = require("../controllers/user.book.controller");
 const userFavoriteController = require("../controllers/user.favorite.controller");
 const userItemController = require("../controllers/user.item.controller");
 const userRateController = require("../controllers/user.rate.controller");
+const userChatController = require("../controllers/user.chat.controller");
 const multer = require("multer");
 
 
