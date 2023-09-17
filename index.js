@@ -27,6 +27,12 @@ const io = new Server(server, {
 
 
 
+io.on('connection', (socket) => {
+  console.log(`user connected to socket: ${socket.id}`);
+
+});
+
+
 const mongooseConnect = require("./configs/mongoDB.connect");
 require("dotenv").config();
 
