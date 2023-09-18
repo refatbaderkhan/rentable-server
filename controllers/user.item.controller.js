@@ -28,7 +28,10 @@ const createItem = async (req, res)=>{
     item_price,
     item_category,
     item_subcategory,
-    item_location
+    item_city,
+    item_area,
+    item_latitude,
+    item_longitude,
   }= req.body;
 
   const item_images = req.files ? req.files.map(file => file.filename) : "";
@@ -40,8 +43,8 @@ const createItem = async (req, res)=>{
     const [checkCategory, checkSubcategory, checkCity, checkArea] = await Promise.all([
      Category.findOne({category_name: item_category}),
      SubCategory.findOne({subCategory_name: item_subcategory}),
-     City.findOne({city_name: item_location.city}),
-     City.findOne({areas: {$in: [item_location.area]}}),
+     City.findOne({city_name: item_city}),
+     City.findOne({areas: {$in: [item_area]}}),
     ]);
 
      if (!checkCategory || !checkSubcategory || !checkCity || !checkArea) {
@@ -59,10 +62,10 @@ const createItem = async (req, res)=>{
       item_subcategory_name: item_subcategory,
       item_location : {
         city: checkCity._id,
-        city_name: item_location.city,
-        area: item_location.area,
-        latitude: item_location.latitude,
-        longitude: item_location.longitude,
+        city_name: item_city,
+        area: item_area,
+        latitude: item_latitude,
+        longitude: item_longitude,
       },
       username,
       user_id: _id,
