@@ -14,11 +14,8 @@ const storage = multer.diskStorage({
     cb(null, "uploads/"); 
   },
   filename: function (req, file, cb) {
-    const item_name = req.body.item_name;
-    const timestamp = new Date().toISOString().split('.')[0].replace(/:/g, "-");
-    const originalName = file.originalname;
-    const extension = originalName.split(".").pop();
-    const filename = `${item_name}${timestamp}.${extension}`;
+    const timestamp = new Date().toISOString().split('.')[0].replace(/:/g, "_");
+    const filename = `${timestamp}_${file.originalname}`;
     cb(null, filename);
   }
 });
@@ -28,7 +25,7 @@ const upload = multer({ storage: storage });
 
 
 router.get("/items/:user_id", userItemController.getUserItems);
-router.post("/create-item", upload.array("item_images"), userItemController.createItem)
+router.post("/create-item", upload.array("item_images", 6), userItemController.createItem)
 router.post("/item/:item_id", userItemController.modifyItem);
 router.delete("/item/:item_id", userItemController.deleteItem);
 
