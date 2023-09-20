@@ -3,6 +3,21 @@ const Item = require("../models/item.model")
 const bcrypt = require("bcrypt")
 
 
+const getAccount = async (req, res)=>{
+  const {_id: user_id} = req.user;
+
+  try {
+    user = await User.findById(user_id);
+
+    if (!user) return res.status(404).send("User not found.");
+
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(500).send("An error occurred while getting the user.");
+  }
+}
+
+
 const updateAccount = async (req, res)=>{
   const {user_id} = req.params;
   const {username, first_name, last_name, email} = req.body;
@@ -103,6 +118,7 @@ const deleteAccount = async (req, res)=>{
 
 
 module.exports = {
+  getAccount,
   updateAccount,
   updatePassword,
   deleteAccount
