@@ -1,6 +1,6 @@
 const {Category, SubCategory, Area, City} = require("../models/item.model")
 const User = require("../models/user.model")
-const Item = require("../models/item.model")
+const {Item} = require("../models/item.model")
 const bcrypt = require("bcrypt");
 
 
@@ -85,8 +85,8 @@ const deleteUserAccount = async (req, res)=>{
     await Item.deleteMany({user_id});
     
     await User.deleteOne({_id: user_id});
-
-    res.status(200).send({message: "Account deleted successfully."});
+    
+    res.status(200).send({ message: "User account deleted successfully.", user_id });
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred while deleting the user account.");
