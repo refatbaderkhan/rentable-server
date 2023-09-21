@@ -43,12 +43,19 @@ const getUser = async (req, res)=>{
   const {user_id} = req.params;
 
   try {
+
+    if (!user_id) {
+
+      const users = await User.find();
+      
+      return res.status(200).send(users);
+    }
+
     user = await User.findById(user_id);
 
     if (!user) return res.status(404).send("User not found.");
 
     
-
     res.status(200).send(user);
   } catch (error) {
     res.status(500).send("An error occurred while getting the user.");
