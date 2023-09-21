@@ -1,5 +1,5 @@
 const User = require("../models/user.model")
-const {Item, Category, SubCategory} = require("../models/item.model")
+const {Item, Category, SubCategory, City} = require("../models/item.model")
 
 
 const getItems = async (req, res)=>{
@@ -66,9 +66,21 @@ const getCategories = async (req, res)=>{
   }
 }
 
+
+const getCities = async (req, res)=>{
+  try {
+    const cities = await City.find();
+
+    res.status(200).send(cities);
+  } catch (error) {
+    res.status(500).send("An error occurred while getting the cities.");
+  }
+}
+
 module.exports = {
   getItems,
   searchItems,
   getUser,
   getCategories,
+  getCities
 }
