@@ -13,6 +13,20 @@ const getItems = async (req, res)=>{
 }
 
 
+const getItem = async (req, res)=>{
+  const {item_id} = req.params;
+
+  try {
+    const item = await Item.findById(item_id);
+
+    if (!item) return res.status(404).send("Item not found.");
+
+    res.status(200).send(item);
+  } catch (error) {
+    res.status(500).send("An error occurred while getting the item.");
+  }
+}
+
 
 const searchItems = async (req, res)=>{
   try {
@@ -75,6 +89,7 @@ const getCities = async (req, res)=>{
 
 module.exports = {
   getItems,
+  getItem,
   searchItems,
   getUser,
   getCategories,
