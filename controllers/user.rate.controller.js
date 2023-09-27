@@ -1,5 +1,5 @@
 const User = require("../models/user.model")
-const Item = require("../models/item.model")
+const {Item} = require("../models/item.model")
 
 
 const rateItem = async (req, res) => {
@@ -36,7 +36,7 @@ const rateItem = async (req, res) => {
 
      await item.save();
 
-    res.status(200).send({ item, message: "Item rated successfully." });
+    res.status(200).send({ratingObject});
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred while rating the item.");
@@ -173,7 +173,7 @@ const rateUser = async (req, res) => {
 
     await user.save();
 
-    res.status(200).send({ user, message: "User rated successfully." });
+    res.status(200).send({ ratingObject });
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred while rating the user.");
