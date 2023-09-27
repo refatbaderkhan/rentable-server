@@ -30,6 +30,9 @@ router.post("/create-item", upload.array("item_images", 6), userItemController.c
 router.post("/item/:item_id", userItemController.modifyItem);
 router.delete("/item/:item_id", userItemController.deleteItem);
 
+router.post("/rate/:item_id", userRateController.rateItem);
+router.post("/rate-user/:user_id", userRateController.rateUser);
+
 router.get("/bookings", userBookingController.getBookings);
 router.post("/book/:item_id", userBookingController.bookItem);
 router.delete("/book/:booking_id", userBookingController.deleteBooking);
