@@ -85,8 +85,7 @@ const message = async (req, res) => {
 
     chat.messages.push(newMessage);
     await chat.save();
-    
-    res.status(200).send(newMessage);
+    res.status(200).send({ chat , newMessage });
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred while sending the message.");
