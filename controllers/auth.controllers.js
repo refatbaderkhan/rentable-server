@@ -29,13 +29,13 @@ const login = async (req, res)=>{
       })
     } catch (error) {
       console.error(error);
-      res.status(500).send("An error occurred while logging in.");
+      res.status(500).send("An error oc curred while logging in.");
 }
 }
 
 
 const register = async (req, res) => {
-  const { password, username, first_name, last_name, email } = req.body;
+  const { password, username, first_name, last_name, email, city, area } = req.body;
   const profile_picture = req.file ? req.file.filename : "";
 
   try {
@@ -52,6 +52,8 @@ const register = async (req, res) => {
       last_name,
       email,
       profile_picture,
+      city,
+      area,
       password: hashedPassword,
       user_type: 1
     });
