@@ -1,3 +1,3 @@
 # rentable-server
 
-for more information about this project, please check the client repo: github.com/refatbaderkhan/rentable-client
+for more information about this project, please check out the client repo: https://github.com/refatbaderkhan/rentable-client
